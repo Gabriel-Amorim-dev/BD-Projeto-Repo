@@ -38,7 +38,7 @@ O script `Script SQL Completo do Projeto` cria todas as tabelas, define as chave
 2.  Copie e cole o [Script SQL Completo do Projeto](https://www.google.com/search?q=%23-script-sql-completo-do-projeto-exerc%C3%ADcio-1) (localizado ao final da nossa conversa).
 3.  Execute o script na íntegra.
 
-**Atenção:** Se você já tinha as tabelas criadas, pode ser necessário deletá-las (`DROP TABLE NOME_TABELA;`) antes de executar o script novamente.
+**Atenção:** Se você já tinha tabelas similares criadas, pode ser necessário deletá-las (`DROP TABLE NOME_TABELA;`) antes de executar o script novamente.
 
 -----
 
