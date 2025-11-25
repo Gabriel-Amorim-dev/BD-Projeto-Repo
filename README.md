@@ -77,14 +77,56 @@ SELECT * FROM HISTORICO; -- Verifique se a coluna 'Situacao' foi preenchida!
 
 -----
 
-## 4\. 📝 Dicionário de Dados Simplificado
+## 4\. 📝 Dicionário de Dados Completo
 
-| Tabela | Coluna | Tipo de Dado | Observação |
-| :--- | :--- | :--- | :--- |
-| **ALUNO** | `Is_Ativo` | `TINYINT(1)` | Status booleano (1=Ativo/Regular). |
-| **ALUNO** | `Atividade` | `VARCHAR(25)` | **Gerada** com base em `Is_Ativo`. |
-| **HISTORICO** | `Nota` | `DECIMAL(4, 2)` | Nota da disciplina (ex: 7.5). |
-| **HISTORICO** | `Situacao` | `VARCHAR(20)` | **Gerada** ('Aprovado' se Nota \>= 7.0). |
-| **HISTORICO** | `Matricula` | `VARCHAR(10)` | FK, referenciando `ALUNO`. |
-| **HISTORICO** | `Cod_Disciplina` | `VARCHAR(10)` | FK, referenciando `DISCIPLINA`. |
-| **HISTORICO** | `Cod_Professor` | `VARCHAR(10)` | FK, referenciando `PROFESSOR`. |
+Este dicionário descreve a estrutura de todas as tabelas normalizadas do projeto Histórico Escolar.
+
+### Tabela: ALUNO
+
+| Tabela | Coluna | Tipo de Dado | Observação | Contexto | Nulidade |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ALUNO** | `Matricula` | `VARCHAR(10)` | **PK** (Chave Primária). | *Identificador único do aluno no sistema.* | **NÃO PODE SER NULO** |
+| **ALUNO** | `Nome_Aluno` | `VARCHAR(100)` | - | *Nome completo do aluno cadastrado.* | **NÃO PODE SER NULO** |
+| **ALUNO** | `Cod_Curso` | `VARCHAR(10)` | **FK** (Chave Estrangeira), referenciando `CURSO`. | *Código do curso em que o aluno está cadastrado. Garante integridade referencial.* | **PODE SER NULO** |
+| **ALUNO** | `Is_Ativo` | `TINYINT(1)` | Status booleano (1=Ativo/Regular, 0=Inativo/Não Regular). | *Indica o status primário e operacional do aluno na universidade.* | **NÃO PODE SER NULO** |
+| **ALUNO** | `Atividade` | `VARCHAR(25)` | **Gerada** automaticamente, baseada no valor de `Is_Ativo`. | *Descrição textual do status do aluno ('Regular' ou 'Não Regular').* | **NÃO PODE SER NULO** |
+
+<br>
+
+### Tabela: CURSO
+
+| Tabela | Coluna | Tipo de Dado | Observação | Contexto | Nulidade |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **CURSO** | `Cod_Curso` | `VARCHAR(10)` | **PK** (Chave Primária). | *Código único que identifica o curso (ex: 0037).* | **NÃO PODE SER NULO** |
+| **CURSO** | `Nome_Curso` | `VARCHAR(100)` | - | *Nome completo do curso (ex: Análise de Sistemas).* | **NÃO PODE SER NULO** |
+
+<br>
+
+### Tabela: PROFESSOR
+
+| Tabela | Coluna | Tipo de Dado | Observação | Contexto | Nulidade |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **PROFESSOR** | `Cod_Professor` | `VARCHAR(10)` | **PK** (Chave Primária). | *Código único que identifica o professor (ex: 001).* | **NÃO PODE SER NULO** |
+| **PROFESSOR** | `Nome_Professor` | `VARCHAR(100)` | - | *Nome completo do professor.* | **NÃO PODE SER NULO** |
+
+<br>
+
+### Tabela: DISCIPLINA
+
+| Tabela | Coluna | Tipo de Dado | Observação | Contexto | Nulidade |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **DISCIPLINA** | `Cod_Disciplina` | `VARCHAR(10)` | **PK** (Chave Primária). | *Código único que identifica a disciplina (ex: AN001).* | **NÃO PODE SER NULO** |
+| **DISCIPLINA** | `Nome_Disciplina` | `VARCHAR(100)` | - | *Nome completo da disciplina (ex: Análise de sistemas).* | **NÃO PODE SER NULO** |
+
+<br>
+
+### Tabela: HISTORICO
+
+| Tabela | Coluna | Tipo de Dado | Observação | Contexto | Nulidade |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **HISTORICO** | `Matricula` | `VARCHAR(10)` | **PK** (Parte da Chave Composta) e **FK** referenciando `ALUNO`. | *Liga o registro de histórico ao aluno.* | **NÃO PODE SER NULO** |
+| **HISTORICO** | `Cod_Disciplina` | `VARCHAR(10)` | **PK** (Parte da Chave Composta) e **FK** referenciando `DISCIPLINA`. | *Liga o registro de histórico à disciplina cursada.* | **NÃO PODE SER NULO** |
+| **HISTORICO** | `Cod_Professor` | `VARCHAR(10)` | **FK** referenciando `PROFESSOR`. | *Professor que ministrou a disciplina naquele registro.* | **PODE SER NULO** |
+| **HISTORICO** | `Nota` | `DECIMAL(4, 2)` | - | *Nota final obtida pelo aluno na disciplina.* | **PODE SER NULO** |
+| **HISTORICO** | `Faltas` | `INT` | - | *Número de faltas registradas na disciplina.* | **PODE SER NULO** |
+| **HISTORICO** | `Situacao` | `VARCHAR(20)` | **Gerada** ('Aprovado' se Nota \>= 7.0, 'Reprovado' caso contrário). | *Status final da disciplina, calculado pela regra de negócio.* | **NÃO PODE SER NULO** |
